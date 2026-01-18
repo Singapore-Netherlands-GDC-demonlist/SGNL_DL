@@ -6,7 +6,13 @@
     "verification": "https://youtu.be/PmynHIAAZpo?si=n0y18oUVGcTCHO04",
     "percentToQualify": "75",
     "password": "46290",
-    "records": [
+    "records": [,
+            {
+            "user": "Nullver",
+            "link": "https://youtu.be/PmynHIAAZpo?si=n0y18oUVGcTCHO04",
+            "percent": 100,
+            "hz": 120
+
         
     ]
 }
