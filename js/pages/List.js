@@ -100,25 +100,25 @@ export default {
                     </template>
                     <h3>Submission Requirements</h3>
                     <p>
-                        Achieved the record without using hacks (however, FPS bypass is allowed, up to 360fps)
+                        Achieved the record without using cheats of anykind (Pointercrate rules)
                     </p>
                     <p>
-                        Achieved the record on the level that is listed on the site - please check the level ID before you submit a record
+                        CBF is allowed, however it must be stated whether you have used cbf or not
                     </p>
                     <p>
-                        Have either source audio or clicks/taps in the video. Edited audio only does not count
+                        Spamming the submission sheet will result in a PERMANENT ban from the demonlist and SGNL will not recognise your extreme
                     </p>
                     <p>
-                        The recording must have a previous attempt and entire death animation shown before the completion, unless the completion is on the first attempt. Everyplay records are exempt from this
+                        You may be further asked for Raw footage if any/all list mods find the footage suspicious 
                     </p>
                     <p>
                         The recording must also show the player hit the endwall, or the completion will be invalidated.
                     </p>
                     <p>
-                        Do not use secret routes or bug routes
+                        The use of bugs or secret ways will not validate the record
                     </p>
                     <p>
-                        Do not use easy modes, only a record of the unmodified level qualifies
+                        Extreme Demons are the only form of levels allowed to be submitted. We may change our mind in the future, but currently only extremes.
                     </p>
                     <p>
                         Once a level falls onto the Legacy List, we accept records for it for 24 hours after it falls off, then afterwards we never accept records for said level
