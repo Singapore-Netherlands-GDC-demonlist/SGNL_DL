@@ -1,0 +1,17 @@
+{
+    "id": 57436521,
+    "name": "Retention Rush",
+    "creators": ["TheBlackHello"],
+    "verifier": "Hydronium",
+    "verification": "https://youtu.be/EdFcQ38y_Dg",
+    "percentToQualify": 56,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "Sample_Victor_1",
+            "link": "https://www.youtube.com/watch?v=MgJeijBGKHU",
+            "percent": 100,
+            "hz": 360
+        }
+    ]
+}
