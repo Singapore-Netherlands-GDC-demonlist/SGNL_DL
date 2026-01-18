@@ -1,1 +1,17 @@
-
+{
+    "id": 10565740,
+    "name": "Cataclysm",
+    "creators": ["GGgirl"],
+    "verifier": "Mr Potato",
+    "verification": "https://youtu.be/QIjI5rkjHZw?si=oWXrItQYl7yrIeUD",
+    "percentToQualify": 100,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "wDyspraxia",
+            "link": "https://youtu.be/w9vUE3VVzvo?si=9altG-qKgKa1dvzz",
+            "percent": 100,
+            "hz": 240
+        }
+    ]
+}
