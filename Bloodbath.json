@@ -1,0 +1,17 @@
+{
+    "id": 10565740,
+    "name": "Bloodbath",
+    "creators": ["Riot and more"],
+    "verifier": "wDyspraxia",
+    "verification": "https://www.youtube.com/watch?v=w9vUE3VVzvo",
+    "percentToQualify": 70,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "Breaddar",
+            "link": "https://www.youtube.com/watch?v=ouwAxh1IaBg",
+            "percent": 100,
+            "hz": 240
+        }
+    ]
+}
