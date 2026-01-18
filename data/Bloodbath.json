@@ -12,6 +12,12 @@
             "link": "https://www.youtube.com/watch?v=ouwAxh1IaBg",
             "percent": 100,
             "hz": 144
-        }
+        },  
+        {
+            "user": "Mr Potato",
+            "link": "https://youtu.be/w8dgXJ8Qr8w?si=Q6oeT_b-kZ4ZzCeF",
+            "percent": 74,
+            "hz": 144
+        },
     ]
 }
