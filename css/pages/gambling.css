@@ -488,10 +488,11 @@ button:disabled { filter: grayscale(.6) brightness(.8); box-shadow:none; cursor:
     background: linear-gradient(135deg, rgba(0,240,255,0.2), rgba(255,215,0,0.2));
     border: 3px solid #ffd700;
     border-radius: 20px;
-    padding: 40px;
+    padding: 20px; /* Reduced padding */
     text-align: center;
     box-shadow: 0 0 60px rgba(255,215,0,0.8);
     animation: bigWinPopup 0.6s ease;
+    max-width: 90%; /* Ensure it doesn't get too wide on small screens */
 }
 @keyframes bigWinPopup {
     0% { transform: scale(0) rotate(-180deg); }
@@ -499,8 +500,8 @@ button:disabled { filter: grayscale(.6) brightness(.8); box-shadow:none; cursor:
     100% { transform: scale(1) rotate(0deg); }
 }
 .win-message h2 {
-    font-size: 48px;
-    margin: 0 0 20px 0;
+    font-size: 38px; /* Reduced font size */
+    margin: 0 0 15px 0; /* Adjusted margin */
     background: linear-gradient(135deg, #ffd700, #ffed4e);
     -webkit-background-clip: text; background-clip: text; color: transparent;
     text-shadow: 0 0 30px rgba(255,215,0,1);
@@ -511,7 +512,7 @@ button:disabled { filter: grayscale(.6) brightness(.8); box-shadow:none; cursor:
     50% { transform: scale(1.1); }
 }
 .win-amount {
-    font-size: 36px;
+    font-size: 28px; /* Reduced font size */
     color: #7cffd4;
     text-shadow: 0 0 20px rgba(124,255,212,.8);
 }

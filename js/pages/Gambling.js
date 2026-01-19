@@ -265,11 +265,17 @@ export default {
         this.createBlackjackDeck(); // For blackjack
         this.createPokerDeck(); // For poker
         this.gameStatusMessage = 'Welcome to Neon Casino!'; // Initial message
+        window.debugCasino = this; // Expose component for debugging
     },
     beforeUnmount() {
         // Additional cleanup for game intervals/timers if they exist
     },
     methods: {
+        // === Debug Methods ===
+        triggerWinOverlay(amount = 500, isJackpot = false) {
+            this.showWinOverlay(amount, isJackpot);
+        },
+
         // === Casino Global Methods ===
         loadCasinoState() {
             const saved = JSON.parse(localStorage.getItem('casinoState') || '{}');
