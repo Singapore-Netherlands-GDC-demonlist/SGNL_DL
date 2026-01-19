@@ -26,6 +26,12 @@ header.dark {
 html,
 body {
     height: 100%;
+    scrollbar-width: none; /* For Firefox */
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    display: none; /* For Chrome, Safari, and Opera */
 }
 
 body {
@@ -51,6 +57,7 @@ main {
             1fr
         );
     column-gap: 2rem;
+    will-change: background, backdrop-filter, transform;
 }
 
 main.dark,
@@ -92,6 +99,10 @@ main {
 }
 main > div {
     overflow-y: auto;
+    scrollbar-width: none; /* For Firefox */
+}
+main > div::-webkit-scrollbar {
+    display: none; /* For Chrome, Safari, and Opera */
 }
 
 .spinner {
