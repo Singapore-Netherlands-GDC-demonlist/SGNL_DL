@@ -75,7 +75,9 @@
                 </div>
             </nav>
         </header>
-        <router-view :class="{ dark: store.dark }"></router-view>
+        <transition name="fade" mode="out-in">
+            <router-view :class="{ dark: store.dark }"></router-view>
+        </transition>
         <div id="draggable-clock">
             <span id="clock-time"></span>
         </div>

@@ -33,6 +33,7 @@
     word-break: normal;
     overflow-wrap: anywhere;
     cursor: pointer;
+    transition: all 0.2s ease-in-out; /* Added transition */
 }
 .page-list .list .level.error button {
     color: var(--color-error);
@@ -42,9 +43,10 @@
 .page-list .list .level button:hover {
     background-color: var(--color-background-hover);
     color: var(--color-on-background-hover);
+    transform: translateY(-2px); /* Added lift effect */
 }
 .page-list .list .level.active button {
-    background-color: #005085;
+    background-color: #ff69b4; /* Hot pink */
     color: var(--color-on-primary);
 }
 .page-list .level-container .level,

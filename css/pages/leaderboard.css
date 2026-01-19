@@ -69,11 +69,13 @@
     text-align: start;
     word-break: normal;
     overflow-wrap: anywhere;
+    transition: all 0.2s ease-in-out; /* Added transition */
 }
 .page-leaderboard .board .user button:hover {
     background-color: var(--color-background-hover);
     color: var(--color-on-background-hover);
     cursor: pointer;
+    transform: translateY(-2px); /* Added lift effect */
 }
 .page-leaderboard .board .user.active button {
     background-color: var(--color-primary);

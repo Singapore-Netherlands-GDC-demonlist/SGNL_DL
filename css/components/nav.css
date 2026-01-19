@@ -15,6 +15,7 @@
 }
 .nav .nav__tab:hover {
     border-color: var(--color-on-primary);
+    transform: translateY(-2px);
 }
 .nav .nav__actions {
     flex: 1;
