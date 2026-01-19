@@ -121,10 +121,10 @@ input[type="checkbox"] {
 
 #draggable-clock {
     position: absolute;
-    top: 50px;
-    left: 50px;
-    width: 150px;
-    height: 150px;
+    top: 20px;
+    right: 20px;
+    width: 100px;
+    height: 100px;
     background: rgba(255, 255, 255, 0.2); /* Frosted glass background */
     backdrop-filter: blur(10px); /* Frosted glass effect */
     -webkit-backdrop-filter: blur(10px); /* Safari support */
@@ -135,10 +135,11 @@ input[type="checkbox"] {
     justify-content: center;
     align-items: center;
     font-family: 'Lexend Deca', sans-serif; /* Use existing font */
-    font-size: 1.5em;
+    font-size: 1em;
     cursor: grab;
     user-select: none;
     will-change: transform; /* Optimize for dragging */
+    z-index: 1000; /* Ensure it's above other elements */
 }
 
 #clock-time {
