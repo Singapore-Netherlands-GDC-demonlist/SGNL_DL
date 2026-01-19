@@ -31,7 +31,7 @@ export default {
                 </div>
                 <button type="submit">Generate Level JSON</button>
             </form>
-            <div v-if="generatedJson" class="generated-json">
+            <div v-if="generatedJson" class="generated-json" ref="generatedJsonSection">
                 <h2>Generated Level JSON</h2>
                 <p>Click the "Copy" button to copy the JSON to your clipboard. Then, create a new file in the /data folder named after your level (e.g., My Awesome Level.json) and paste the content. Finally, add the level name to /data/_list.json.</p>
                 <button @click="copyJson">Copy JSON</button>
@@ -66,6 +66,10 @@ export default {
                 this.level.percentToQualify = 100;
             }
             this.generatedJson = JSON.stringify(this.level, null, 4);
+
+            this.$nextTick(() => {
+                this.$refs.generatedJsonSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
         },
         copyJson() {
             navigator.clipboard.writeText(this.generatedJson).then(() => {
