@@ -24,6 +24,7 @@
         />
         <link rel="stylesheet" type="text/css" href="/css/pages/roulette.css" />
         <link rel="stylesheet" type="text/css" href="/css/pages/add-level.css" />
+        <link rel="stylesheet" type="text/css" href="/css/pages/gambling.css" />
         <link rel="stylesheet" type="text/css" href="/css/components/nav.css" />
         <link rel="stylesheet" type="text/css" href="/css/components/btn.css" />
         <link
@@ -51,6 +52,9 @@
                 <router-link class="nav__tab" to="/roulette">
                     <span class="type-label-lg">Roulette</span>
                 </router-link>
+                <router-link class="nav__tab" to="/gambling">
+                    <span class="type-label-lg">Gambling</span>
+                </router-link>
                 <div class="nav__actions">
                     <button
                         class="nav__icon"
@@ -75,11 +79,6 @@
                 </div>
             </nav>
         </header>
-        <transition name="fade" mode="out-in">
-            <router-view :class="{ dark: store.dark }"></router-view>
-        </transition>
-        <div id="draggable-clock">
-            <span id="clock-time"></span>
-        </div>
+        <router-view :class="{ dark: store.dark }"></router-view>
     </body>
 </html>

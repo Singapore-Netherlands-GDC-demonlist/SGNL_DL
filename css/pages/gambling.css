@@ -1,0 +1,36 @@
+.page-gambling {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 2rem;
+}
+
+#draggable-clock {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.2); /* Frosted glass background */
+    backdrop-filter: blur(10px); /* Frosted glass effect */
+    -webkit-backdrop-filter: blur(10px); /* Safari support */
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Lexend Deca', sans-serif; /* Use existing font */
+    font-size: 1em;
+    cursor: grab;
+    user-select: none;
+    will-change: transform; /* Optimize for dragging */
+    z-index: 1000; /* Ensure it's above other elements */
+}
+
+#clock-time {
+    color: white; /* Ensure visibility on frosted background */
+}
