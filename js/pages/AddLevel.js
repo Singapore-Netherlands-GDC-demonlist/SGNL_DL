@@ -33,8 +33,9 @@ export default {
             </form>
             <div v-if="generatedJson" class="generated-json">
                 <h2>Generated Level JSON</h2>
-                <p>Click the button below to download the generated JSON file. Make sure to save it in the /data folder with a .json extension (e.g., My Awesome Level.json). Then, add the level name to /data/_list.json.</p>
-                <button @click="downloadJson">Download Level JSON</button>
+                <p>Click the "Copy" button to copy the JSON to your clipboard. Then, create a new file in the /data folder named after your level (e.g., My Awesome Level.json) and paste the content. Finally, add the level name to /data/_list.json.</p>
+                <button @click="copyJson">Copy JSON</button>
+                <span v-if="copied" class="success-message">Copied to clipboard!</span>
             </div>
         </main>
     `,
@@ -52,6 +53,7 @@ export default {
             },
             creators: '',
             generatedJson: null,
+            copied: false,
         };
     },
     methods: {
@@ -65,14 +67,14 @@ export default {
             }
             this.generatedJson = JSON.stringify(this.level, null, 4);
         },
-        downloadJson() {
-            const blob = new Blob([this.generatedJson], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `${this.level.name}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
+        copyJson() {
+            navigator.clipboard.writeText(this.generatedJson).then(() => {
+                this.copied = true;
+                setTimeout(() => {
+                    this.copied = false;
+                }, 2000);
+            });
         },
+
     },
 };
