@@ -118,3 +118,29 @@ input[type="checkbox"] {
     cursor: pointer;
     margin: 0;
 }
+
+#draggable-clock {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    width: 150px;
+    height: 150px;
+    background: rgba(255, 255, 255, 0.2); /* Frosted glass background */
+    backdrop-filter: blur(10px); /* Frosted glass effect */
+    -webkit-backdrop-filter: blur(10px); /* Safari support */
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Lexend Deca', sans-serif; /* Use existing font */
+    font-size: 1.5em;
+    cursor: grab;
+    user-select: none;
+    will-change: transform; /* Optimize for dragging */
+}
+
+#clock-time {
+    color: white; /* Ensure visibility on frosted background */
+}
