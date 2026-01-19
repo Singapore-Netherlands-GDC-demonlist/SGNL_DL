@@ -376,7 +376,7 @@ export default {
                 this.reelsStoppedCount++;
                 if (this.reelsStoppedCount === 3) { // Assuming 3 reels
                     this.evaluateSlots(results);
-                    this.slotsSpinning = false;
+                    // slotsSpinning = false will now be set by evaluateSlots after all animations
                 }
             }, 650);
         },
@@ -437,8 +437,11 @@ export default {
                     if (machine) machine.classList.remove('lose');
                     reels.forEach(r => r && r.classList.remove('lose-fade'));
                     this.gameStatusMessage = 'Spin again?';
+                    this.slotsSpinning = false; // Set slotsSpinning to false here
                 }, 800);
             }
+            
+            this.updateJackpot(Math.floor(this.slotBet * 0.1));
         },
         spinSlots() {
             if (this.slotsSpinning || this.gameState.balance < this.slotBet) return;
