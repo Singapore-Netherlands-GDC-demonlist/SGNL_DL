@@ -189,6 +189,7 @@ export default {
             slotBet: 50,
             slotsSpinning: false,
             slotSymbolsList: ["🍒","🔔","🍋","⭐","💎","7️⃣"],
+            reelsStoppedCount: 0, // New property to track stopped reels
 
             // Roulette game state
             rouletteBet: 50,
@@ -353,7 +354,7 @@ export default {
                 }
             });
         },
-        stopReel(reelRefName, finalSymbol, i) {
+        stopReel(reelRefName, finalSymbol, i, results) { // Added results parameter
             const reel = this.$refs[reelRefName];
             if (!reel) return;
             const col = reel.querySelector('.symbols');
@@ -364,7 +365,6 @@ export default {
 
             setTimeout(()=>{
                 reel.classList.remove('spinning');
-                // No need for wraps, as particles are separate
                 col.style.transition = 'none';
                 col.innerHTML = '';
                 const finalDiv = document.createElement('div');
@@ -372,6 +372,12 @@ export default {
                 finalDiv.textContent = finalSymbol;
                 col.appendChild(finalDiv);
                 col.style.transform = 'translateY(0px)';
+
+                this.reelsStoppedCount++;
+                if (this.reelsStoppedCount === 3) { // Assuming 3 reels
+                    this.evaluateSlots(results);
+                    this.slotsSpinning = false;
+                }
             }, 650);
         },
         evaluateSlots(results){
@@ -450,6 +456,7 @@ export default {
 
             this.updateBalance(-this.slotBet);
             this.gameStatusMessage = 'Spinning...';
+            this.reelsStoppedCount = 0; // Reset count at the start of each spin
 
             const results = Array.from({length: 3}, () => this.slotSymbolsList[Math.floor(Math.random()*this.slotSymbolsList.length)]);
 
@@ -471,11 +478,9 @@ export default {
                     // Calculate target position for the last symbol
                     const targetY = -(col.children.length - 1) * 110; // Assuming each symbol is 110px tall
                     col.style.transform = `translateY(${targetY}px)`;
-                    setTimeout(() => this.stopReel(`slotReel${i}`, results[i], i), 1200); // Pass ref name
+                    setTimeout(() => this.stopReel(`slotReel${i}`, results[i], i, results), 1200); // Pass results here
                 }, i * 500);
             });
-
-            setTimeout(() => { this.evaluateSlots(results); this.slotsSpinning = false; }, (reels.length - 1) * 500 + 1200 + 650 + 100);
         },
 
         // === Roulette Methods ===
