@@ -19,13 +19,24 @@
 }
 .page-leaderboard .error-container .error {
     padding: 1rem;
-    background-color: var(--color-error);
+    background: rgba(222, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 10px;
+    border: 1px solid rgba(222, 0, 0, 0.3);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     color: var(--color-on-error);
 }
 .page-leaderboard .board-container,
 .page-leaderboard .player-container {
     grid-row: 2;
-    padding-block: 2rem;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 .page-leaderboard .board-container {
     padding-inline: 1rem;
@@ -47,10 +58,13 @@
     width: 100%;
 }
 .page-leaderboard .board .user button {
-    background-color: var(--color-background);
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     color: var(--color-on-background);
-    border: none;
-    border-radius: 0.5rem;
     padding: 1rem;
     text-align: start;
     word-break: normal;

@@ -32,11 +32,18 @@ body {
     display: flex;
     flex-direction: column;
     margin: 0;
+    background: linear-gradient(to right, #8e2de2, #4a00e0);
+    color: white;
 }
 
 header,
 main {
-    background-color: var(--color-background);
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     color: var(--color-on-background);
     display: grid;
     grid-template-columns: minmax(16rem, 1fr) minmax(16rem, 2fr) minmax(
@@ -46,11 +53,16 @@ main {
     column-gap: 2rem;
 }
 
+main.dark,
+header.dark {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+}
+
 header {
     display: flex;
     padding-inline: calc(25vw - 10rem);
     height: 4rem;
-    background-color: var(--color-primary);
     color: var(--color-on-primary);
 }
 @media screen and (min-width: 1366px) {
@@ -76,6 +88,7 @@ main {
     display: grid;
     grid-template-rows: minmax(0, 1fr);
     column-gap: 2rem;
+    margin-top: 1rem;
 }
 main > div {
     overflow-y: auto;
