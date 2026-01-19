@@ -348,11 +348,10 @@ export default {
         updateJackpot(amount) {
             this.gameState.jackpot += amount;
             this.saveCasinoState();
-            // jackpot display is now via data binding
         },
         updateAllDisplays() {
             // All balance and bet displays are now updated via data binding and refs
-            // No direct DOM manipulation needed here anymore
+            // No direct DOM manipulation needed here anymore, as Vue's reactivity handles it.
         },
         loadBet(key, fallback=50){
             const v = parseInt(localStorage.getItem(key));
@@ -385,7 +384,8 @@ export default {
         selectGame(game) {
             this.activeGame = game;
             this.$nextTick(() => {
-                this.updateAllDisplays(); // Ensure bet/balance displays are updated for the new game
+                // Initial update for the newly active game's displays
+                // The balance and bet for the active game will update automatically due to reactivity
             });
         },
         adjustBet(game, amount) {
@@ -393,35 +393,7 @@ export default {
             currentBet = Math.max(50, Math.min(currentBet + amount, this.gameState.balance));
             this[`${game}Bet`] = currentBet;
             this.saveBet(`bet_${game}`, currentBet);
-            this.updateAllDisplays();
-        },
-        burstMinor(containerRefName){
-            const containerEl = this.$refs[containerRefName];
-            if (!containerEl) return;
-            for (let i=0;i<24;i++){
-                const p = document.createElement('div'); p.className='p';
-                p.style.left = '50%'; p.style.top='50%';
-                p.style.setProperty('--x', `${(Math.random()*200-100)}px`);
-                p.style.setProperty('--y', `${(Math.random()*200-100)}px`);
-                containerEl.appendChild(p);
-                setTimeout(()=>p.remove(),900);
-            }
-        },
-        burstMajor(containerRefName){
-            const containerEl = this.$refs[containerRefName];
-            if (!containerEl) return;
-            for (let i=0;i<60;i++){
-                const p = document.createElement('div'); p.className='p';
-                p.style.left = '50%'; p.style.top='50%';
-                p.style.background = i % 3 === 0 ? '#ffd700' : '#7cffd4';
-                p.style.filter = i % 3 === 0 ? 'drop-shadow(0 0 8px #ffd700)' : 'drop-shadow(0 0 8px #7cffd4)';
-                p.style.width = `${Math.random()*4 + 4}px`;
-                p.style.height = p.style.width;
-                p.style.setProperty('--x', `${(Math.random()*400-200)}px`);
-                p.style.setProperty('--y', `${(Math.random()*400-200)}px`);
-                containerEl.appendChild(p);
-                setTimeout(()=>p.remove(),900);
-            }
+            // No need to call updateAllDisplays here, Vue reactivity handles it
         },
 
         // === Slots Methods ===
