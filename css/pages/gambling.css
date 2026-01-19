@@ -3,41 +3,40 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* Removed justify-content: center; to allow content to flow */
-    /* Removed height: 100%; to allow content to take natural height */
     gap: 2rem;
-    padding: 20px; /* Added padding to match 2ndcasino.html body */
-    overflow-x: hidden; /* Added to match 2ndcasino.html body */
-    background: radial-gradient(circle at top, #0b1a2a, #05080f 60%); /* Added to match 2ndcasino.html body */
-    color: #eaf6ff; /* Added to match 2ndcasino.html body */
-    min-height: 100vh; /* Added to match 2ndcasino.html body */
+    padding: 20px;
+    overflow-x: hidden;
+    background: radial-gradient(circle at top, #0b1a2a, #05080f 60%);
+    color: #eaf6ff;
+    min-height: 100vh;
+    min-width: 320px; /* Added min-width */
 }
 
-#draggable-clock {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    width: 100px;
-    height: 100px;
-    background: rgba(255, 255, 255, 0.2); /* Frosted glass background */
-    backdrop-filter: blur(10px); /* Frosted glass effect */
-    -webkit-backdrop-filter: blur(10px); /* Safari support */
-    border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Lexend Deca', sans-serif; /* Use existing font */
-    font-size: 1em;
-    cursor: grab;
-    user-select: none;
-    will-change: transform; /* Optimize for dragging */
-    z-index: 1000; /* Ensure it's above other elements */
+.game-status-message {
+    font-size: 1.4em; /* Slightly larger */
+    font-weight: 900; /* Bolder */
+    color: #ffd700; /* Gold color */
+    text-shadow: 0 0 15px rgba(255,215,0,0.8), 0 0 25px rgba(255,215,0,0.5); /* Enhanced glow */
+    margin-top: 15px; /* More space */
+    margin-bottom: 20px; /* More space below */
+    text-align: center;
+    letter-spacing: 0.05em; /* Slightly spaced out letters */
+    animation: pulseGlow 1.5s infinite alternate; /* Subtle pulsing glow */
+    background: rgba(0,0,0,0.2); /* Semi-transparent background */
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,215,0,0.3);
 }
 
-#clock-time {
-    color: white; /* Ensure visibility on frosted background */
+@keyframes pulseGlow {
+    from {
+        text-shadow: 0 0 10px rgba(255,215,0,0.6), 0 0 20px rgba(255,215,0,0.3);
+        transform: scale(1);
+    }
+    to {
+        text-shadow: 0 0 20px rgba(255,215,0,1), 0 0 30px rgba(255,215,0,0.7);
+        transform: scale(1.02);
+    }
 }
 
 /* Styles from 2ndcasino.html */
@@ -206,11 +205,20 @@
 button {
     border:0; border-radius: 14px; padding: 10px 14px; color:#021014; cursor:pointer; 
     background: linear-gradient(135deg, #00f0ff, #7cffd4);
-    box-shadow: 0 8px 20px rgba(0,255,255,.35), inset 0 -2px 0 rgba(0,0,0,.3);
+    box-shadow: 0 8px 20px rgba(0,255,255,.35), inset 0 -2px 0 rgba(0,0,0,.25);
     transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
     font-weight:700; letter-spacing:.1em;
 }
-button:active { transform: translateY(1px); filter: brightness(.95); }
+button:hover { 
+    transform: translateY(-3px); /* More pronounced lift */
+    box-shadow: 0 12px 25px rgba(0,255,255,.45), inset 0 -2px 0 rgba(0,0,0,.25); /* Stronger shadow */
+    filter: brightness(1.1); /* Slight brightness increase */
+}
+button:active { 
+    transform: translateY(1px); 
+    filter: brightness(.9); /* Slightly darker when pressed */
+    box-shadow: 0 4px 10px rgba(0,255,255,.25), inset 0 -1px 0 rgba(0,0,0,.2); /* Softer shadow when pressed */
+}
 button:disabled { filter: grayscale(.6) brightness(.8); box-shadow:none; cursor:not-allowed; }
 
 .bet { display:flex; align-items:center; gap:6px; }

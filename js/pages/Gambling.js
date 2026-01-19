@@ -1,10 +1,6 @@
 export default {
     template: `
         <main class="page-gambling">
-            <div id="draggable-clock">
-                <span id="clock-time"></span>
-            </div>
-
             <div class="stars" ref="starsContainer"></div>
             <div class="win-overlay" :class="{ 'active': winOverlayActive }">
                 <div class="win-message">
@@ -17,6 +13,7 @@ export default {
 
             <div class="casino-header">
                 <h1 class="casino-title">NEON CASINO</h1>
+                <p class="game-status-message">{{ gameStatusMessage }}</p>
             </div>
 
             <div class="game-selector">
@@ -179,12 +176,6 @@ export default {
     `,
     data() {
         return {
-            // Draggable clock state
-            isDragging: false,
-            offsetX: 0,
-            offsetY: 0,
-            clockInterval: null, // To store interval ID for clearing
-
             // Casino global state
             gameState: {
                 balance: 1000,
@@ -238,6 +229,7 @@ export default {
             winOverlayActive: false,
             winTitle: '🎉 BIG WIN! 🎉',
             winAmount: '+500',
+            gameStatusMessage: 'Welcome to Neon Casino!', // New property for status messages
         };
     },
     computed: {
@@ -266,66 +258,17 @@ export default {
         }
     },
     mounted() {
-        this.initClock();
         this.loadCasinoState();
         this.createStars();
-        this.updateAllDisplays();
         this.fillReels(); // For slots
         this.createBlackjackDeck(); // For blackjack
         this.createPokerDeck(); // For poker
+        this.gameStatusMessage = 'Welcome to Neon Casino!'; // Initial message
     },
     beforeUnmount() {
-        if (this.clockInterval) {
-            clearInterval(this.clockInterval);
-        }
         // Additional cleanup for game intervals/timers if they exist
     },
     methods: {
-        // === Clock Methods ===
-        initClock() {
-            // Ensure elements exist before manipulation
-            this.$nextTick(() => {
-                const draggableClock = document.getElementById('draggable-clock');
-                const clockTime = document.getElementById('clock-time');
-
-                if (!draggableClock || !clockTime) {
-                    console.error('Clock elements not found in Gambling page.');
-                    return;
-                }
-
-                const updateClock = () => {
-                    const now = new Date();
-                    const hours = String(now.getHours()).padStart(2, '0');
-                    const minutes = String(now.getMinutes()).padStart(2, '0');
-                    const seconds = String(now.getSeconds()).padStart(2, '0');
-                    clockTime.textContent = `${hours}:${minutes}:${seconds}`;
-                };
-
-                updateClock();
-                this.clockInterval = setInterval(updateClock, 1000); // Store interval ID
-
-                draggableClock.addEventListener('mousedown', (e) => {
-                    this.isDragging = true;
-                    this.offsetX = e.clientX - draggableClock.getBoundingClientRect().left;
-                    this.offsetY = e.clientY - draggableClock.getBoundingClientRect().top;
-                    draggableClock.style.cursor = 'grabbing';
-                    draggableClock.style.position = 'fixed'; // Ensure position is fixed during drag
-                });
-
-                document.addEventListener('mousemove', (e) => {
-                    if (!this.isDragging) return;
-
-                    draggableClock.style.left = `${e.clientX - this.offsetX}px`;
-                    draggableClock.style.top = `${e.clientY - this.offsetY}px`;
-                });
-
-                document.addEventListener('mouseup', () => {
-                    this.isDragging = false;
-                    draggableClock.style.cursor = 'grab';
-                });
-            });
-        },
-
         // === Casino Global Methods ===
         loadCasinoState() {
             const saved = JSON.parse(localStorage.getItem('casinoState') || '{}');
@@ -460,10 +403,12 @@ export default {
                 if (title) title.classList.add('major-glow');
                 reels.forEach(r => r && r.classList.add('major-shake', 'major-glow'));
                 this.burstMajor('slotParticles');
+                this.gameStatusMessage = winType === 'jackpot' ? 'JACKPOT!!!' : `BIG WIN! +${win}`;
                 setTimeout(() => {
                     if (machine) machine.classList.remove('major-win');
                     if (title) title.classList.remove('major-glow');
                     reels.forEach(r => r && r.classList.remove('major-shake', 'major-glow'));
+                    this.gameStatusMessage = 'Spin again?';
                 }, 1000);
             } else if (winType === 'minor') {
                 this.updateBalance(win);
@@ -471,21 +416,23 @@ export default {
                 if (title) title.classList.add('win-glow');
                 reels.forEach(r => r && r.classList.add('win-shake'));
                 this.burstMinor('slotParticles');
+                this.gameStatusMessage = `Win! +${win}`;
                 setTimeout(() => {
                     if (machine) machine.classList.remove('win-pulse');
                     if (title) title.classList.remove('win-glow');
                     reels.forEach(r => r && r.classList.remove('win-shake'));
+                    this.gameStatusMessage = 'Spin again?';
                 }, 700);
             } else {
                 if (machine) machine.classList.add('lose');
                 reels.forEach(r => r && r.classList.add('lose-fade'));
+                this.gameStatusMessage = 'No win this time...';
                 setTimeout(() => {
                     if (machine) machine.classList.remove('lose');
-                    reels.forEach(r => r.classList.remove('lose-fade'));
+                    reels.forEach(r => r && r.classList.remove('lose-fade'));
+                    this.gameStatusMessage = 'Spin again?';
                 }, 800);
             }
-            
-            this.updateJackpot(Math.floor(this.slotBet * 0.1));
         },
         spinSlots() {
             if (this.slotsSpinning || this.gameState.balance < this.slotBet) return;
@@ -502,6 +449,7 @@ export default {
             if (this.$refs.slotParticles) this.$refs.slotParticles.innerHTML = '';
 
             this.updateBalance(-this.slotBet);
+            this.gameStatusMessage = 'Spinning...';
 
             const results = Array.from({length: 3}, () => this.slotSymbolsList[Math.floor(Math.random()*this.slotSymbolsList.length)]);
 
@@ -559,6 +507,7 @@ export default {
             if (this.$refs.rouletteParticles) this.$refs.rouletteParticles.innerHTML = '';
 
             this.updateBalance(-this.rouletteBet);
+            this.gameStatusMessage = 'Spinning the wheel...';
 
             const num = Math.floor(Math.random() * 37);
             const rotations = 5 + Math.random() * 3;
@@ -583,13 +532,19 @@ export default {
                     if (table) table.classList.add('major-win');
                     if (title) title.classList.add('major-glow');
                     this.burstMajor('rouletteParticles');
+                    this.gameStatusMessage = `Roulette: ${num} wins! You won +${winAmount}!`;
                     setTimeout(() => {
                         if (table) table.classList.remove('major-win');
                         if (title) title.classList.remove('major-glow');
+                        this.gameStatusMessage = 'Place your bets!';
                     }, 1000);
                 } else {
                     if (table) table.classList.add('lose');
-                    setTimeout(() => {if (table) table.classList.remove('lose');}, 800);
+                    this.gameStatusMessage = `Roulette: ${num}. You lost -${this.rouletteBet}.`;
+                    setTimeout(() => {
+                        if (table) table.classList.remove('lose');
+                        this.gameStatusMessage = 'Place your bets!';
+                    }, 800);
                 }
 
                 this.updateJackpot(Math.floor(this.rouletteBet * 0.1));
@@ -625,6 +580,7 @@ export default {
             if (this.$refs.diceParticles) this.$refs.diceParticles.innerHTML = '';
 
             this.updateBalance(-this.diceBet);
+            this.gameStatusMessage = 'Rolling the dice...';
 
             if (die1) die1.classList.add('rolling');
             if (die2) die2.classList.add('rolling');
@@ -659,13 +615,16 @@ export default {
                         if (game) game.classList.add('major-win');
                         if (title) title.classList.add('major-glow');
                         this.burstMajor('diceParticles');
+                        this.gameStatusMessage = `Dice: Rolled ${d1} & ${d2}. You won +${winAmount}!`;
                         setTimeout(() => {
                             if (game) game.classList.remove('major-win');
                             if (title) title.classList.remove('major-glow');
+                            this.gameStatusMessage = 'Place your bets!';
                         }, 1000);
                     } else {
                         if (game) game.classList.add('lose');
-                        setTimeout(() => {if (game) game.classList.remove('lose');}, 800);
+                        this.gameStatusMessage = `Dice: Rolled ${d1} & ${d2}. You lost -${this.diceBet}.`;
+                        setTimeout(() => {if (game) game.classList.remove('lose'); this.gameStatusMessage = 'Place your bets!';}, 800);
                     }
 
                     this.updateJackpot(Math.floor(this.diceBet * 0.1));
@@ -715,7 +674,10 @@ export default {
         },
         // updateBlackjackDisplay() is no longer needed as computed properties handle updates
         dealBlackjack() {
-            if (this.gameState.balance < this.blackjackBet) return;
+            if (this.gameState.balance < this.blackjackBet) {
+                this.gameStatusMessage = 'Not enough balance to deal!';
+                return;
+            }
             
             this.updateBalance(-this.blackjackBet);
             this.createBlackjackDeck();
@@ -730,23 +692,30 @@ export default {
             if (title) title.classList.remove('win-glow', 'major-glow');
             if (this.$refs.blackjackParticles) this.$refs.blackjackParticles.innerHTML = '';
             
-            // updateBlackjackDisplay() is no longer needed here
+            this.gameStatusMessage = 'Dealing cards...';
             
             if (this.blackjackHandTotal(this.playerHand) === 21) {
+                this.gameStatusMessage = 'Blackjack! Waiting for dealer...';
                 this.endBlackjackGame();
+            } else {
+                this.gameStatusMessage = 'Hit or Stand?';
             }
         },
         hitBlackjack() {
             if (!this.blackjackGameActive) return;
             this.playerHand.push(this.blackjackDeck.pop());
-            // updateBlackjackDisplay() is no longer needed here
+            this.gameStatusMessage = 'You hit!';
             
             if (this.blackjackHandTotal(this.playerHand) > 21) {
+                this.gameStatusMessage = 'You Busted!';
                 this.endBlackjackGame();
+            } else {
+                this.gameStatusMessage = 'Hit or Stand?';
             }
         },
         standBlackjack() {
             if (!this.blackjackGameActive) return;
+            this.gameStatusMessage = 'You stand. Dealer\'s turn...';
             this.endBlackjackGame();
         },
         endBlackjackGame() {
@@ -755,8 +724,6 @@ export default {
             while (this.blackjackHandTotal(this.dealerHand) < 17) {
                 this.dealerHand.push(this.blackjackDeck.pop());
             }
-            
-            // updateBlackjackDisplay() is no longer needed here
             
             const playerTotal = this.blackjackHandTotal(this.playerHand);
             const dealerTotal = this.blackjackHandTotal(this.dealerHand);
@@ -767,24 +734,29 @@ export default {
 
             if (playerTotal > 21) {
                 if (table) table.classList.add('lose');
-                setTimeout(() => {if (table) table.classList.remove('lose');}, 800);
+                this.gameStatusMessage = `You busted! Dealer wins -${this.blackjackBet}.`;
+                setTimeout(() => {if (table) table.classList.remove('lose'); this.gameStatusMessage = 'Deal again?';}, 800);
             } else if (dealerTotal > 21 || playerTotal > dealerTotal) {
                 winAmount = this.playerHand.length === 2 && playerTotal === 21 ? this.blackjackBet * 2.5 : this.blackjackBet * 2;
                 this.updateBalance(winAmount);
                 if (table) table.classList.add('major-win');
                 if (title) title.classList.add('major-glow');
                 this.burstMajor('blackjackParticles');
+                this.gameStatusMessage = `You win! +${winAmount}!`;
                 setTimeout(() => {
                     if (table) table.classList.remove('major-win');
                     if (title) title.classList.remove('major-glow');
+                    this.gameStatusMessage = 'Deal again?';
                 }, 1000);
             } else if (playerTotal === dealerTotal) {
                 this.updateBalance(this.blackjackBet);
                 if (table) table.classList.add('win-pulse');
-                setTimeout(() => {if (table) table.classList.remove('win-pulse');}, 700);
+                this.gameStatusMessage = `Push! Your bet of ${this.blackjackBet} is returned.`;
+                setTimeout(() => {if (table) table.classList.remove('win-pulse'); this.gameStatusMessage = 'Deal again?';}, 700);
             } else {
                 if (table) table.classList.add('lose');
-                setTimeout(() => {if (table) table.classList.remove('lose');}, 800);
+                this.gameStatusMessage = `Dealer wins! You lost -${this.blackjackBet}.`;
+                setTimeout(() => {if (table) table.classList.remove('lose'); this.gameStatusMessage = 'Deal again?';}, 800);
             }
             
             this.updateJackpot(Math.floor(this.blackjackBet * 0.1));
@@ -852,6 +824,7 @@ export default {
                 this.pokerHeld = [false, false, false, false, false];
                 this.pokerDealtInitial = true;
                 this.pokerResult = '';
+                this.gameStatusMessage = 'Select cards to hold, then DRAW.';
             } else {
                 // Draw phase
                 for (let i = 0; i < 5; i++) {
@@ -870,13 +843,16 @@ export default {
                     if (table) table.classList.add('major-win');
                     if (title) title.classList.add('major-glow');
                     this.burstMajor('pokerParticles');
+                    this.gameStatusMessage = `Poker: ${evalResult.name}! You won +${winAmount}!`;
                     setTimeout(() => {
                         if (table) table.classList.remove('major-win');
                         if (title) title.classList.remove('major-glow');
+                        this.gameStatusMessage = 'Deal a new hand?';
                     }, 1000);
                 } else {
                     if (table) table.classList.add('lose');
-                    setTimeout(() => {if (table) table.classList.remove('lose');}, 800);
+                    this.gameStatusMessage = `Poker: ${evalResult.name}. You lost -${this.pokerBet}.`;
+                    setTimeout(() => {if (table) table.classList.remove('lose'); this.gameStatusMessage = 'Deal a new hand?';}, 800);
                 }
 
                 this.updateJackpot(Math.floor(this.pokerBet * 0.1));
