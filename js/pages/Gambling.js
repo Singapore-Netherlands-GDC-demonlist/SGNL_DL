@@ -328,18 +328,20 @@
             document.getElementById('jackpot').textContent = this.gameState.jackpot;
         },
         updateAllDisplays() {
-            if (document.getElementById('slotBalance')) document.getElementById('slotBalance').textContent = this.gameState.balance;
-            if (document.getElementById('rouletteBalance')) document.getElementById('rouletteBalance').textContent = this.gameState.balance;
-            if (document.getElementById('diceBalance')) document.getElementById('diceBalance').textContent = this.gameState.balance;
-            if (document.getElementById('blackjackBalance')) document.getElementById('blackjackBalance').textContent = this.gameState.balance;
-            if (document.getElementById('pokerBalance')) document.getElementById('pokerBalance').textContent = this.gameState.balance;
-            if (document.getElementById('jackpot')) document.getElementById('jackpot').textContent = this.gameState.jackpot;
+            // Update balance displays
+            this.$refs.slotBalance.textContent = this.gameState.balance;
+            this.$refs.rouletteBalance.textContent = this.gameState.balance;
+            this.$refs.diceBalance.textContent = this.gameState.balance;
+            this.$refs.blackjackBalance.textContent = this.gameState.balance;
+            this.$refs.pokerBalance.textContent = this.gameState.balance;
+            this.$refs.jackpotDisplay.textContent = this.gameState.jackpot;
             
-            if (document.getElementById('slotBet')) document.getElementById('slotBet').textContent = this.slotBet;
-            if (document.getElementById('rouletteBet')) document.getElementById('rouletteBet').textContent = this.rouletteBet;
-            if (document.getElementById('diceBet')) document.getElementById('diceBet').textContent = this.diceBet;
-            if (document.getElementById('blackjackBet')) document.getElementById('blackjackBet').textContent = this.blackjackBet;
-            if (document.getElementById('pokerBet')) document.getElementById('pokerBet').textContent = this.pokerBet;
+            // Update bet displays
+            this.$refs.slotBetDisplay.textContent = this.slotBet;
+            this.$refs.rouletteBetDisplay.textContent = this.rouletteBet;
+            this.$refs.diceBetDisplay.textContent = this.diceBet;
+            this.$refs.blackjackBetDisplay.textContent = this.blackjackBet;
+            this.$refs.pokerBetDisplay.textContent = this.pokerBet;
         },
         loadBet(key, fallback=50){
             const v = parseInt(localStorage.getItem(key));
@@ -353,7 +355,7 @@
             setTimeout(() => { this.winOverlayActive = false; }, 2500);
         },
         createStars() {
-            const starsEl = document.getElementById('stars');
+            const starsEl = this.$refs.starsContainer;
             if (!starsEl) return;
             for (let i = 0; i < 100; i++) {
                 const star = document.createElement('div');
@@ -377,7 +379,9 @@
             this.saveBet(`bet_${game}`, currentBet);
             this.updateAllDisplays();
         },
-        burstMinor(containerEl){
+        burstMinor(containerRefName){
+            const containerEl = this.$refs[containerRefName];
+            if (!containerEl) return;
             for (let i=0;i<24;i++){
                 const p = document.createElement('div'); p.className='p';
                 p.style.left = '50%'; p.style.top='50%';
@@ -387,7 +391,9 @@
                 setTimeout(()=>p.remove(),900);
             }
         },
-        burstMajor(containerEl){
+        burstMajor(containerRefName){
+            const containerEl = this.$refs[containerRefName];
+            if (!containerEl) return;
             for (let i=0;i<60;i++){
                 const p = document.createElement('div'); p.className='p';
                 p.style.left = '50%'; p.style.top='50%';
