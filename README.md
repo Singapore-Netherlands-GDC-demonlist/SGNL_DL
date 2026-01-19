@@ -26,6 +26,7 @@ What are some common reasons for the website not loading?
 ---
 
 ## This is a template btw, dysp is too bad at coding to actually do smth like this
+creds given to template makers.
 
 ## Repo Maintainers:
 
