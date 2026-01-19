@@ -1,64 +1,65 @@
+export default {
     template: `
         <main class="page-gambling">
             <div id="draggable-clock">
                 <span id="clock-time"></span>
             </div>
 
-            <div class="stars" id="stars"></div>
-            <div class="win-overlay" id="winOverlay">
+            <div class="stars" ref="starsContainer"></div>
+            <div class="win-overlay" :class="{ 'active': winOverlayActive }">
                 <div class="win-message">
-                    <h2 id="winTitle">🎉 BIG WIN! 🎉</h2>
-                    <div class="win-amount" id="winAmount">+500</div>
+                    <h2 ref="winTitle">{{ winTitle }}</h2>
+                    <div class="win-amount" ref="winAmount">{{ winAmount }}</div>
                 </div>
             </div>
 
-            <div class="jackpot-banner">💰 JACKPOT: <span id="jackpot">5000</span></div>
+            <div class="jackpot-banner">💰 JACKPOT: <span ref="jackpotDisplay">{{ gameState.jackpot }}</span></div>
 
             <div class="casino-header">
                 <h1 class="casino-title">NEON CASINO</h1>
             </div>
 
             <div class="game-selector">
-                <button class="game-btn active" data-game="slots" @click="selectGame('slots')">🎰 SLOTS</button>
-                <button class="game-btn" data-game="roulette" @click="selectGame('roulette')">🎡 ROULETTE</button>
-                <button class="game-btn" data-game="dice" @click="selectGame('dice')">🎲 DICE</button>
-                <button class="game-btn" data-game="blackjack" @click="selectGame('blackjack')">🃏 BLACKJACK</button>
-                <button class="game-btn" data-game="poker" @click="selectGame('poker')">♠️ POKER</button>
+                <button class="game-btn" :class="{ 'active': activeGame === 'slots' }" @click="selectGame('slots')">🎰 SLOTS</button>
+                <button class="game-btn" :class="{ 'active': activeGame === 'roulette' }" @click="selectGame('roulette')">🎡 ROULETTE</button>
+                <button class="game-btn" :class="{ 'active': activeGame === 'dice' }" @click="selectGame('dice')">🎲 DICE</button>
+                <button class="game-btn" :class="{ 'active': activeGame === 'blackjack' }" @click="selectGame('blackjack')">🃏 BLACKJACK</button>
+                <button class="game-btn" :class="{ 'active': activeGame === 'poker' }" @click="selectGame('poker')">♠️ POKER</button>
             </div>
 
             <!-- SLOTS -->
-            <div class="game-container" :class="{ 'active': activeGame === 'slots' }" id="slots">
-                <div class="machine" id="machine">
-                    <div class="title" id="slotTitle">NEON SLOT</div>
+            <div class="game-container" :class="{ 'active': activeGame === 'slots' }">
+                <div class="machine" ref="slotsMachine">
+                    <div class="title" ref="slotTitle">NEON SLOT</div>
                     <div class="reels">
-                        <div class="reel-wrap"><div class="reel"><div class="symbols"></div></div></div>
-                        <div class="reel-wrap"><div class="reel"><div class="symbols"></div></div></div>
-                        <div class="reel-wrap"><div class="reel"><div class="symbols"></div></div></div>
+                        <div class="reel-wrap"><div class="reel" ref="slotReel0"><div class="symbols"></div></div></div>
+                        <div class="reel-wrap"><div class="reel" ref="slotReel1"><div class="symbols"></div></div></div>
+                        <div class="reel-wrap"><div class="reel" ref="slotReel2"><div class="symbols"></div></div></div>
                     </div>
                     <div class="hud">
                         <div class="stats">
-                            <div class="panel">BALANCE: <b id="slotBalance">1000</b></div>
+                            <div class="panel">BALANCE: <b ref="slotBalance">{{ gameState.balance }}</b></div>
                             <div class="bet panel">
-                                BET: <b id="slotBet">50</b>
+                                BET: <b ref="slotBetDisplay">{{ slotBet }}</b>
                                 <button id="slotDown" @click="adjustBet('slots', -50)">-</button>
                                 <button id="slotUp" @click="adjustBet('slots', 50)">+</button>
                             </div>
                         </div>
-                        <button class="spin-btn" id="slotSpin" @click="spinSlots">SPIN</button>
+                        <button class="spin-btn" id="slotSpin" @click="spinSlots" :disabled="slotsSpinning || gameState.balance < slotBet">SPIN</button>
                     </div>
-                    <div class="particles" id="slotParticles"></div>
+                    <div class="particles" ref="slotParticles"></div>
                 </div>
             </div>
 
             <!-- ROULETTE -->
-            <div class="game-container" :class="{ 'active': activeGame === 'roulette' }" id="roulette">
-                <div class="roulette-table" id="rouletteTable">
-                    <div class="title" id="rouletteTitle">ROULETTE</div>
+            <div class="game-container" :class="{ 'active': activeGame === 'roulette' }">
+                <div class="roulette-table" ref="rouletteTable">
+                    <div class="title" ref="rouletteTitle">ROULETTE</div>
                     <div style="position: relative;">
                         <div class="roulette-pointer"></div>
-                        <div class="roulette-wheel" id="wheel"></div>
+                        <div class="roulette-wheel" ref="wheel"></div>
                     </div>
-                    <div class="result-number" id="rouletteResult">-</div>
+                    <div class="result-number" ref="rouletteResult" :style="{ color: rouletteResultColor }">{{ rouletteResult }}</div>
                     <div class="betting-grid">
                         <div class="bet-option red" :class="{ 'selected': selectedRouletteBet === 'red' }" @click="selectRouletteBet('red')" data-bet="red">RED</div>
                         <div class="bet-option black" :class="{ 'selected': selectedRouletteBet === 'black' }" @click="selectRouletteBet('black')" data-bet="black">BLACK</div>
@@ -69,28 +70,28 @@
                     </div>
                     <div class="hud">
                         <div class="stats">
-                            <div class="panel">BALANCE: <b id="rouletteBalance">1000</b></div>
+                            <div class="panel">BALANCE: <b ref="rouletteBalance">{{ gameState.balance }}</b></div>
                             <div class="bet panel">
-                                BET: <b id="rouletteBet">50</b>
+                                BET: <b ref="rouletteBetDisplay">{{ rouletteBet }}</b>
                                 <button id="rouletteDown" @click="adjustBet('roulette', -50)">-</button>
                                 <button id="rouletteUp" @click="adjustBet('roulette', 50)">+</button>
                             </div>
                         </div>
-                        <button class="spin-btn" id="rouletteSpin" @click="spinRoulette">SPIN</button>
+                        <button class="spin-btn" id="rouletteSpin" @click="spinRoulette" :disabled="rouletteSpinning || !selectedRouletteBet || gameState.balance < rouletteBet">SPIN</button>
                     </div>
-                    <div class="particles" id="rouletteParticles"></div>
+                    <div class="particles" ref="rouletteParticles"></div>
                 </div>
             </div>
 
             <!-- DICE -->
-            <div class="game-container" :class="{ 'active': activeGame === 'dice' }" id="dice">
-                <div class="dice-game" id="diceGame">
-                    <div class="title" id="diceTitle">DICE ROLL</div>
+            <div class="game-container" :class="{ 'active': activeGame === 'dice' }">
+                <div class="dice-game" ref="diceGame">
+                    <div class="title" ref="diceTitle">DICE ROLL</div>
                     <div class="dice-container">
-                        <div class="die" id="die1"><div class="die-value">?</div></div>
-                        <div class="die" id="die2"><div class="die-value">?</div></div>
+                        <div class="die" ref="die1"><div class="die-value">{{ die1Value }}</div></div>
+                        <div class="die" ref="die2"><div class="die-value">{{ die2Value }}</div></div>
                     </div>
-                    <div class="total-display" id="diceTotal">-</div>
+                    <div class="total-display" ref="diceTotal">{{ diceTotal }}</div>
                     <div class="dice-bets">
                         <div class="bet-option" :class="{ 'selected': selectedDiceBet === 'over7' }" @click="selectDiceBet('over7')" data-bet="over7">OVER 7</div>
                         <div class="bet-option" :class="{ 'selected': selectedDiceBet === 'under7' }" @click="selectDiceBet('under7')" data-bet="under7">UNDER 7</div>
@@ -99,76 +100,79 @@
                     </div>
                     <div class="hud">
                         <div class="stats">
-                            <div class="panel">BALANCE: <b id="diceBalance">1000</b></div>
+                            <div class="panel">BALANCE: <b ref="diceBalance">{{ gameState.balance }}</b></div>
                             <div class="bet panel">
-                                BET: <b id="diceBet">50</b>
+                                BET: <b ref="diceBetDisplay">{{ diceBet }}</b>
                                 <button id="diceDown" @click="adjustBet('dice', -50)">-</button>
                                 <button id="diceUp" @click="adjustBet('dice', 50)">+</button>
                             </div>
                         </div>
-                        <button class="spin-btn" id="diceRoll" @click="rollDice">ROLL</button>
+                        <button class="spin-btn" id="diceRoll" @click="rollDice" :disabled="diceRolling || !selectedDiceBet || gameState.balance < diceBet">ROLL</button>
                     </div>
-                    <div class="particles" id="diceParticles"></div>
+                    <div class="particles" ref="diceParticles"></div>
                 </div>
             </div>
 
             <!-- BLACKJACK -->
-            <div class="game-container" :class="{ 'active': activeGame === 'blackjack' }" id="blackjack">
-                <div class="blackjack-table" id="blackjackTable">
-                    <div class="title" id="blackjackTitle">BLACKJACK</div>
+            <div class="game-container" :class="{ 'active': activeGame === 'blackjack' }">
+                <div class="blackjack-table" ref="blackjackTable">
+                    <div class="title" ref="blackjackTitle">BLACKJACK</div>
                     <div class="card-area">
                         <div class="hand-label">DEALER</div>
-                        <div class="card-row" id="dealerHand"></div>
-                        <div class="hand-total" id="dealerTotal"></div>
+                        <div class="card-row" ref="dealerHandContainer" v-html="dealerHandHTML"></div>
+                        <div class="hand-total">{{ dealerTotal }}</div>
                     </div>
                     <div class="card-area">
                         <div class="hand-label">YOUR HAND</div>
-                        <div class="card-row" id="playerHand"></div>
-                        <div class="hand-total" id="playerTotal"></div>
+                        <div class="card-row" ref="playerHandContainer" v-html="playerHandHTML"></div>
+                        <div class="hand-total">{{ playerTotal }}</div>
                     </div>
                     <div class="hud">
                         <div class="stats">
-                            <div class="panel">BALANCE: <b id="blackjackBalance">1000</b></div>
+                            <div class="panel">BALANCE: <b ref="blackjackBalance">{{ gameState.balance }}</b></div>
                             <div class="bet panel">
-                                BET: <b id="blackjackBet">50</b>
+                                BET: <b ref="blackjackBetDisplay">{{ blackjackBet }}</b>
                                 <button id="blackjackDown" @click="adjustBet('blackjack', -50)">-</button>
                                 <button id="blackjackUp" @click="adjustBet('blackjack', 50)">+</button>
                             </div>
                         </div>
                         <div class="blackjack-actions">
-                            <button id="dealBtn" @click="dealBlackjack">DEAL</button>
-                            <button id="hitBtn" @click="hitBlackjack" :disabled="!blackjackGameActive || playerTotal > 21">HIT</button>
+                            <button id="dealBtn" @click="dealBlackjack" :disabled="blackjackGameActive || gameState.balance < blackjackBet">DEAL</button>
+                            <button id="hitBtn" @click="hitBlackjack" :disabled="!blackjackGameActive || blackjackHandTotal(playerHand) > 21">HIT</button>
                             <button id="standBtn" @click="standBlackjack" :disabled="!blackjackGameActive">STAND</button>
                         </div>
                     </div>
-                    <div class="particles" id="blackjackParticles"></div>
+                    <div class="particles" ref="blackjackParticles"></div>
                 </div>
             </div>
 
             <!-- POKER -->
-            <div class="game-container" :class="{ 'active': activeGame === 'poker' }" id="poker">
-                <div class="poker-table" id="pokerTable">
-                    <div class="title" id="pokerTitle">VIDEO POKER</div>
-                    <div class="poker-result" id="pokerResult">{{ pokerResult }}</div>
-                    <div class="poker-hand" id="pokerHand">
+            <div class="game-container" :class="{ 'active': activeGame === 'poker' }">
+                <div class="poker-table" ref="pokerTable">
+                    <div class="title" ref="pokerTitle">VIDEO POKER</div>
+                    <div class="poker-result" ref="pokerResult">{{ pokerResult }}</div>
+                    <div class="poker-hand" ref="pokerHandContainer">
                         <div v-for="(card, index) in pokerHand" :key="index" 
                             :class="['poker-card', card.suit, { 'selected': pokerHeld[index] }]"
-                            @click="togglePokerHold(index)">
+                            @click="togglePokerHold(index)"
+                        >
                             {{ card.value }}{{ suitSymbols[card.suit] }}
                         </div>
                     </div>
                     <div class="hud">
                         <div class="stats">
-                            <div class="panel">BALANCE: <b id="pokerBalance">1000</b></div>
+                            <div class="panel">BALANCE: <b ref="pokerBalance">{{ gameState.balance }}</b></div>
                             <div class="bet panel">
-                                BET: <b id="pokerBet">50</b>
+                                BET: <b ref="pokerBetDisplay">{{ pokerBet }}</b>
                                 <button id="pokerDown" @click="adjustBet('poker', -50)">-</button>
                                 <button id="pokerUp" @click="adjustBet('poker', 50)">+</button>
                             </div>
                         </div>
-                        <button class="spin-btn" id="pokerDeal" @click="dealPoker">{{ pokerDealtInitial ? 'DRAW' : 'DEAL' }}</button>
+                        <button class="spin-btn" id="pokerDeal" @click="dealPoker" :disabled="(pokerDealtInitial && !pokerHand.length) || gameState.balance < pokerBet">
+                            {{ pokerDealtInitial ? 'DRAW' : 'DEAL' }}
+                        </button>
                     </div>
-                    <div class="particles" id="pokerParticles"></div>
+                    <div class="particles" ref="pokerParticles"></div>
                 </div>
             </div>
         </main>
@@ -179,6 +183,7 @@
             isDragging: false,
             offsetX: 0,
             offsetY: 0,
+            clockInterval: null, // To store interval ID for clearing
 
             // Casino global state
             gameState: {
@@ -198,7 +203,7 @@
             rouletteBet: 50,
             rouletteSpinning: false,
             selectedRouletteBet: null,
-            rouletteReds: [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36],
+            rouletteReds: [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36], // Corrected original typo: 23,23 was 23,23,25
             rouletteResult: '-',
 
             // Dice game state
@@ -216,8 +221,6 @@
             blackjackDeck: [],
             dealerHand: [],
             playerHand: [],
-            dealerTotal: '',
-            playerTotal: '',
             blackjackSuits: ['hearts', 'diamonds', 'clubs', 'spades'],
             blackjackSuitSymbols: {'hearts':'♥','diamonds':'♦','clubs':'♣','spades':'♠'},
             blackjackValues: ['A','2','3','4','5','6','7','8','9','10','J','Q','K'],
@@ -235,17 +238,31 @@
             winOverlayActive: false,
             winTitle: '🎉 BIG WIN! 🎉',
             winAmount: '+500',
-
-            // Star particles
-            stars: [],
         };
     },
     computed: {
-        allBetsValid() {
-            // Example: check if a bet is selected for the current game
-            if (this.activeGame === 'roulette' && !this.selectedRouletteBet) return false;
-            if (this.activeGame === 'dice' && !this.selectedDiceBet) return false;
-            return true;
+        rouletteResultColor() {
+            if (this.rouletteResult === '-') return '#eaf6ff'; // Default color
+            if (this.rouletteResult === 0) return '#7cffd4'; // Green for 0
+            if (this.rouletteReds.includes(this.rouletteResult)) return '#ff6b6b'; // Red
+            return '#ddd'; // Black
+        },
+        dealerTotal() {
+            if (this.blackjackGameActive && this.dealerHand.length > 1) {
+                return `Total: ${this.blackjackCardValue(this.dealerHand[0])}`;
+            }
+            return `Total: ${this.blackjackHandTotal(this.dealerHand)}`;
+        },
+        playerTotal() {
+            return `Total: ${this.blackjackHandTotal(this.playerHand)}`;
+        },
+        dealerHandHTML() {
+            // This computes the HTML string for dealer's hand
+            return this.dealerHand.map((card, i) => this.createBlackjackCardElement(card, this.blackjackGameActive && i === 1)).join('');
+        },
+        playerHandHTML() {
+            // This computes the HTML string for player's hand
+            return this.playerHand.map(card => this.createBlackjackCardElement(card)).join('');
         }
     },
     mounted() {
@@ -258,48 +275,54 @@
         this.createPokerDeck(); // For poker
     },
     beforeUnmount() {
-        // Clear clock interval if necessary
+        if (this.clockInterval) {
+            clearInterval(this.clockInterval);
+        }
+        // Additional cleanup for game intervals/timers if they exist
     },
     methods: {
         // === Clock Methods ===
         initClock() {
-            const draggableClock = document.getElementById('draggable-clock');
-            const clockTime = document.getElementById('clock-time');
+            // Ensure elements exist before manipulation
+            this.$nextTick(() => {
+                const draggableClock = document.getElementById('draggable-clock');
+                const clockTime = document.getElementById('clock-time');
 
-            if (!draggableClock || !clockTime) {
-                console.error('Clock elements not found in Gambling page.');
-                return;
-            }
+                if (!draggableClock || !clockTime) {
+                    console.error('Clock elements not found in Gambling page.');
+                    return;
+                }
 
-            const updateClock = () => {
-                const now = new Date();
-                const hours = String(now.getHours()).padStart(2, '0');
-                const minutes = String(now.getMinutes()).padStart(2, '0');
-                const seconds = String(now.getSeconds()).padStart(2, '0');
-                clockTime.textContent = `${hours}:${minutes}:${seconds}`;
-            };
+                const updateClock = () => {
+                    const now = new Date();
+                    const hours = String(now.getHours()).padStart(2, '0');
+                    const minutes = String(now.getMinutes()).padStart(2, '0');
+                    const seconds = String(now.getSeconds()).padStart(2, '0');
+                    clockTime.textContent = `${hours}:${minutes}:${seconds}`;
+                };
 
-            updateClock();
-            setInterval(updateClock, 1000);
+                updateClock();
+                this.clockInterval = setInterval(updateClock, 1000); // Store interval ID
 
-            draggableClock.addEventListener('mousedown', (e) => {
-                this.isDragging = true;
-                this.offsetX = e.clientX - draggableClock.getBoundingClientRect().left;
-                this.offsetY = e.clientY - draggableClock.getBoundingClientRect().top;
-                draggableClock.style.cursor = 'grabbing';
-                draggableClock.style.position = 'fixed'; // Ensure position is fixed during drag
-            });
+                draggableClock.addEventListener('mousedown', (e) => {
+                    this.isDragging = true;
+                    this.offsetX = e.clientX - draggableClock.getBoundingClientRect().left;
+                    this.offsetY = e.clientY - draggableClock.getBoundingClientRect().top;
+                    draggableClock.style.cursor = 'grabbing';
+                    draggableClock.style.position = 'fixed'; // Ensure position is fixed during drag
+                });
 
-            document.addEventListener('mousemove', (e) => {
-                if (!this.isDragging) return;
+                document.addEventListener('mousemove', (e) => {
+                    if (!this.isDragging) return;
 
-                draggableClock.style.left = `${e.clientX - this.offsetX}px`;
-                draggableClock.style.top = `${e.clientY - this.offsetY}px`;
-            });
+                    draggableClock.style.left = `${e.clientX - this.offsetX}px`;
+                    draggableClock.style.top = `${e.clientY - this.offsetY}px`;
+                });
 
-            document.addEventListener('mouseup', () => {
-                this.isDragging = false;
-                draggableClock.style.cursor = 'grab';
+                document.addEventListener('mouseup', () => {
+                    this.isDragging = false;
+                    draggableClock.style.cursor = 'grab';
+                });
             });
         },
 
@@ -325,23 +348,11 @@
         updateJackpot(amount) {
             this.gameState.jackpot += amount;
             this.saveCasinoState();
-            document.getElementById('jackpot').textContent = this.gameState.jackpot;
+            // jackpot display is now via data binding
         },
         updateAllDisplays() {
-            // Update balance displays
-            this.$refs.slotBalance.textContent = this.gameState.balance;
-            this.$refs.rouletteBalance.textContent = this.gameState.balance;
-            this.$refs.diceBalance.textContent = this.gameState.balance;
-            this.$refs.blackjackBalance.textContent = this.gameState.balance;
-            this.$refs.pokerBalance.textContent = this.gameState.balance;
-            this.$refs.jackpotDisplay.textContent = this.gameState.jackpot;
-            
-            // Update bet displays
-            this.$refs.slotBetDisplay.textContent = this.slotBet;
-            this.$refs.rouletteBetDisplay.textContent = this.rouletteBet;
-            this.$refs.diceBetDisplay.textContent = this.diceBet;
-            this.$refs.blackjackBetDisplay.textContent = this.blackjackBet;
-            this.$refs.pokerBetDisplay.textContent = this.pokerBet;
+            // All balance and bet displays are now updated via data binding and refs
+            // No direct DOM manipulation needed here anymore
         },
         loadBet(key, fallback=50){
             const v = parseInt(localStorage.getItem(key));
@@ -355,16 +366,21 @@
             setTimeout(() => { this.winOverlayActive = false; }, 2500);
         },
         createStars() {
-            const starsEl = this.$refs.starsContainer;
-            if (!starsEl) return;
-            for (let i = 0; i < 100; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.left = `${Math.random() * 100}%`;
-                star.style.top = `${Math.random() * 100}%`;
-                star.style.animationDelay = `${Math.random() * 3}s`;
-                starsEl.appendChild(star);
-            }
+            this.$nextTick(() => { // Ensure starsContainer is rendered
+                const starsEl = this.$refs.starsContainer;
+                if (!starsEl) {
+                    console.error('starsContainer ref not found.');
+                    return;
+                }
+                for (let i = 0; i < 100; i++) {
+                    const star = document.createElement('div');
+                    star.className = 'star';
+                    star.style.left = `${Math.random() * 100}%`;
+                    star.style.top = `${Math.random() * 100}%`;
+                    star.style.animationDelay = `${Math.random() * 3}s`;
+                    starsEl.appendChild(star);
+                }
+            });
         },
         selectGame(game) {
             this.activeGame = game;
@@ -410,8 +426,10 @@
 
         // === Slots Methods ===
         fillReels() {
-            const reels = document.querySelectorAll('#slots .reel');
+            // Reels are still handled by direct DOM manipulation for performance reasons during spinning
+            const reels = [this.$refs.slotReel0, this.$refs.slotReel1, this.$refs.slotReel2];
             reels.forEach(reel => {
+                if (!reel) return;
                 const col = reel.querySelector('.symbols'); col.innerHTML = '';
                 for (let i=0;i<20;i++) {
                     const s = document.createElement('div'); s.className='symbol'; 
@@ -420,7 +438,9 @@
                 }
             });
         },
-        stopReel(reel, finalSymbol, i) {
+        stopReel(reelRefName, finalSymbol, i) {
+            const reel = this.$refs[reelRefName];
+            if (!reel) return;
             const col = reel.querySelector('.symbols');
             const last = col.lastElementChild; last.textContent = finalSymbol; last.classList.add('final');
             const y = -(col.children.length - 1) * 110;
@@ -429,8 +449,7 @@
 
             setTimeout(()=>{
                 reel.classList.remove('spinning');
-                const wraps = document.querySelectorAll('#slots .reel-wrap');
-                wraps[i].classList.remove('scanning');
+                // No need for wraps, as particles are separate
                 col.style.transition = 'none';
                 col.innerHTML = '';
                 const finalDiv = document.createElement('div');
@@ -443,10 +462,9 @@
         evaluateSlots(results){
             let win = 0;
             let winType = 'none';
-            const machine = document.getElementById('machine');
-            const title = document.getElementById('slotTitle');
-            const reels = document.querySelectorAll('#slots .reel');
-            const particles = document.getElementById('slotParticles');
+            const machine = this.$refs.slotsMachine;
+            const title = this.$refs.slotTitle;
+            const reels = [this.$refs.slotReel0, this.$refs.slotReel1, this.$refs.slotReel2];
             
             if (results[0]==='7️⃣' && results[1]==='7️⃣' && results[2]==='7️⃣') {
                 win = this.gameState.jackpot;
@@ -466,31 +484,31 @@
             if (winType === 'jackpot' || winType === 'major') {
                 this.updateBalance(win);
                 this.showWinOverlay(win, winType === 'jackpot');
-                machine.classList.add('major-win');
-                title.classList.add('major-glow');
-                reels.forEach(r => r.classList.add('major-shake', 'major-glow'));
-                this.burstMajor(particles);
+                if (machine) machine.classList.add('major-win');
+                if (title) title.classList.add('major-glow');
+                reels.forEach(r => r && r.classList.add('major-shake', 'major-glow'));
+                this.burstMajor('slotParticles');
                 setTimeout(() => {
-                    machine.classList.remove('major-win');
-                    title.classList.remove('major-glow');
-                    reels.forEach(r => r.classList.remove('major-shake', 'major-glow'));
+                    if (machine) machine.classList.remove('major-win');
+                    if (title) title.classList.remove('major-glow');
+                    reels.forEach(r => r && r.classList.remove('major-shake', 'major-glow'));
                 }, 1000);
             } else if (winType === 'minor') {
                 this.updateBalance(win);
-                machine.classList.add('win-pulse');
-                title.classList.add('win-glow');
-                reels.forEach(r => r.classList.add('win-shake'));
-                this.burstMinor(particles);
+                if (machine) machine.classList.add('win-pulse');
+                if (title) title.classList.add('win-glow');
+                reels.forEach(r => r && r.classList.add('win-shake'));
+                this.burstMinor('slotParticles');
                 setTimeout(() => {
-                    machine.classList.remove('win-pulse');
-                    title.classList.remove('win-glow');
-                    reels.forEach(r => r.classList.remove('win-shake'));
+                    if (machine) machine.classList.remove('win-pulse');
+                    if (title) title.classList.remove('win-glow');
+                    reels.forEach(r => r && r.classList.remove('win-shake'));
                 }, 700);
             } else {
-                machine.classList.add('lose');
-                reels.forEach(r => r.classList.add('lose-fade'));
+                if (machine) machine.classList.add('lose');
+                reels.forEach(r => r && r.classList.add('lose-fade'));
                 setTimeout(() => {
-                    machine.classList.remove('lose');
+                    if (machine) machine.classList.remove('lose');
                     reels.forEach(r => r.classList.remove('lose-fade'));
                 }, 800);
             }
@@ -501,25 +519,25 @@
             if (this.slotsSpinning || this.gameState.balance < this.slotBet) return;
             this.slotsSpinning = true;
 
-            const machine = document.getElementById('machine');
-            const title = document.getElementById('slotTitle');
-            const reels = document.querySelectorAll('#slots .reel');
-            const wraps = document.querySelectorAll('#slots .reel-wrap');
-            const particles = document.getElementById('slotParticles');
-
-            machine.classList.remove('win-pulse', 'major-win', 'lose');
-            title.classList.remove('win-glow', 'major-glow');
-            reels.forEach(r => r.classList.remove('win-shake', 'major-shake', 'major-glow', 'lose-fade'));
-            particles.innerHTML = '';
+            const machine = this.$refs.slotsMachine;
+            const title = this.$refs.slotTitle;
+            const reels = [this.$refs.slotReel0, this.$refs.slotReel1, this.$refs.slotReel2];
+            const reelWraps = [this.$refs.slotReelWrap0, this.$refs.slotReelWrap1, this.$refs.slotReelWrap2]; // Assuming refs for wrappers
+            
+            if (machine) machine.classList.remove('win-pulse', 'major-win', 'lose');
+            if (title) title.classList.remove('win-glow', 'major-glow');
+            reels.forEach(r => r && r.classList.remove('win-shake', 'major-shake', 'major-glow', 'lose-fade'));
+            if (this.$refs.slotParticles) this.$refs.slotParticles.innerHTML = '';
 
             this.updateBalance(-this.slotBet);
 
             const results = Array.from({length: 3}, () => this.slotSymbolsList[Math.floor(Math.random()*this.slotSymbolsList.length)]);
 
             reels.forEach((reel, i) => {
+                if (!reel) return;
                 const col = reel.querySelector('.symbols');
                 reel.classList.remove('spinning','win-shake');
-                wraps[i].classList.remove('scanning');
+                if (reelWraps[i]) reelWraps[i].classList.remove('scanning'); // Use ref for wrap
                 col.querySelectorAll('.symbol').forEach(s=>s.classList.remove('final'));
                 col.style.transition = 'none';
                 col.style.transform = 'translateY(0px)';
@@ -527,13 +545,13 @@
                 this.fillReels(); // Re-fill to ensure enough symbols for spin
                 
                 setTimeout(() => {
-                    wraps[i].classList.add('scanning');
+                    if (reelWraps[i]) reelWraps[i].classList.add('scanning'); // Use ref for wrap
                     reel.classList.add('spinning');
                     col.style.transition = 'transform 1.2s linear';
                     // Calculate target position for the last symbol
                     const targetY = -(col.children.length - 1) * 110; // Assuming each symbol is 110px tall
                     col.style.transform = `translateY(${targetY}px)`;
-                    setTimeout(() => this.stopReel(reel, results[i], i), 1200);
+                    setTimeout(() => this.stopReel(`slotReel${i}`, results[i], i), 1200); // Pass ref name
                 }, i * 500);
             });
 
@@ -560,14 +578,13 @@
             if (this.rouletteSpinning || !this.selectedRouletteBet || this.gameState.balance < this.rouletteBet) return;
             this.rouletteSpinning = true;
 
-            const table = document.getElementById('rouletteTable');
-            const title = document.getElementById('rouletteTitle');
-            const particles = document.getElementById('rouletteParticles');
-            const wheel = document.getElementById('wheel');
+            const table = this.$refs.rouletteTable;
+            const title = this.$refs.rouletteTitle;
+            const wheel = this.$refs.wheel;
 
-            table.classList.remove('win-pulse', 'major-win', 'lose');
-            title.classList.remove('win-glow', 'major-glow');
-            particles.innerHTML = '';
+            if (table) table.classList.remove('win-pulse', 'major-win', 'lose');
+            if (title) title.classList.remove('win-glow', 'major-glow');
+            if (this.$refs.rouletteParticles) this.$refs.rouletteParticles.innerHTML = '';
 
             this.updateBalance(-this.rouletteBet);
 
@@ -575,33 +592,32 @@
             const rotations = 5 + Math.random() * 3;
             const finalAngle = (num * (360/37)) + (rotations * 360);
             
-            wheel.style.transition = 'transform 3s cubic-bezier(.2,.8,.2,1)';
-            wheel.style.transition = 'none';
-            wheel.style.transform = 'rotate(0deg)';
-            void wheel.offsetHeight; // Trigger reflow to apply reset immediately
-            wheel.style.transition = 'transform 3s cubic-bezier(.2,.8,.2,1)';
-            wheel.style.transform = `rotate(${finalAngle}deg)`;
+            if (wheel) {
+                wheel.style.transition = 'none';
+                wheel.style.transform = 'rotate(0deg)';
+                void wheel.offsetHeight; // Trigger reflow to apply reset immediately
+                wheel.style.transition = 'transform 3s cubic-bezier(.2,.8,.2,1)';
+                wheel.style.transform = `rotate(${finalAngle}deg)`;
+            }
 
             setTimeout(() => {
-                this.rouletteResult = num;
-                const resultEl = document.getElementById('rouletteResult');
-                resultEl.style.color = this.rouletteReds.includes(num) ? '#ff6b6b' : num === 0 ? '#7cffd4' : '#ddd';
+                this.rouletteResult = num; // This will trigger rouletteResultColor computed property
                 
                 const won = this.checkWinRoulette(num, this.selectedRouletteBet);
                 if (won) {
                     const winAmount = this.rouletteBet * 2;
                     this.updateBalance(winAmount);
                     if (winAmount >= 200) this.showWinOverlay(winAmount);
-                    table.classList.add('major-win');
-                    title.classList.add('major-glow');
-                    this.burstMajor(particles);
+                    if (table) table.classList.add('major-win');
+                    if (title) title.classList.add('major-glow');
+                    this.burstMajor('rouletteParticles');
                     setTimeout(() => {
-                        table.classList.remove('major-win');
-                        title.classList.remove('major-glow');
+                        if (table) table.classList.remove('major-win');
+                        if (title) title.classList.remove('major-glow');
                     }, 1000);
                 } else {
-                    table.classList.add('lose');
-                    setTimeout(() => table.classList.remove('lose'), 800);
+                    if (table) table.classList.add('lose');
+                    setTimeout(() => {if (table) table.classList.remove('lose');}, 800);
                 }
 
                 this.updateJackpot(Math.floor(this.rouletteBet * 0.1));
@@ -627,28 +643,24 @@
             if (this.diceRolling || !this.selectedDiceBet || this.gameState.balance < this.diceBet) return;
             this.diceRolling = true;
 
-            const game = document.getElementById('diceGame');
-            const title = document.getElementById('diceTitle');
-            const particles = document.getElementById('diceParticles');
-            const die1 = document.getElementById('die1');
-            const die2 = document.getElementById('die2');
-            const die1Value = die1.querySelector('.die-value');
-            const die2Value = die2.querySelector('.die-value');
+            const game = this.$refs.diceGame;
+            const title = this.$refs.diceTitle;
+            const die1 = this.$refs.die1;
+            const die2 = this.$refs.die2;
 
-
-            game.classList.remove('win-pulse', 'major-win', 'lose');
-            title.classList.remove('win-glow', 'major-glow');
-            particles.innerHTML = '';
+            if (game) game.classList.remove('win-pulse', 'major-win', 'lose');
+            if (title) title.classList.remove('win-glow', 'major-glow');
+            if (this.$refs.diceParticles) this.$refs.diceParticles.innerHTML = '';
 
             this.updateBalance(-this.diceBet);
 
-            die1.classList.add('rolling');
-            die2.classList.add('rolling');
+            if (die1) die1.classList.add('rolling');
+            if (die2) die2.classList.add('rolling');
 
             let count = 0;
             const interval = setInterval(() => {
-                die1Value.textContent = this.diceFaces[Math.floor(Math.random() * 6)];
-                die2Value.textContent = this.diceFaces[Math.floor(Math.random() * 6)];
+                this.die1Value = this.diceFaces[Math.floor(Math.random() * 6)];
+                this.die2Value = this.diceFaces[Math.floor(Math.random() * 6)];
                 count++;
                 
                 if (count > 10) {
@@ -657,10 +669,10 @@
                     const d1 = Math.floor(Math.random() * 6) + 1;
                     const d2 = Math.floor(Math.random() * 6) + 1;
                     
-                    die1Value.textContent = this.diceFaces[d1 - 1];
-                    die2Value.textContent = this.diceFaces[d2 - 1];
-                    die1.classList.remove('rolling');
-                    die2.classList.remove('rolling');
+                    this.die1Value = this.diceFaces[d1 - 1];
+                    this.die2Value = this.diceFaces[d2 - 1];
+                    if (die1) die1.classList.remove('rolling');
+                    if (die2) die2.classList.remove('rolling');
                     
                     const total = d1 + d2;
                     this.diceTotal = `Total: ${total}`;
@@ -672,16 +684,16 @@
                         this.updateBalance(winAmount);
                         if (winAmount >= 200) this.showWinOverlay(winAmount);
                         
-                        game.classList.add('major-win');
-                        title.classList.add('major-glow');
-                        this.burstMajor(particles);
+                        if (game) game.classList.add('major-win');
+                        if (title) title.classList.add('major-glow');
+                        this.burstMajor('diceParticles');
                         setTimeout(() => {
-                            game.classList.remove('major-win');
-                            title.classList.remove('major-glow');
+                            if (game) game.classList.remove('major-win');
+                            if (title) title.classList.remove('major-glow');
                         }, 1000);
                     } else {
-                        game.classList.add('lose');
-                        setTimeout(() => game.classList.remove('lose'), 800);
+                        if (game) game.classList.add('lose');
+                        setTimeout(() => {if (game) game.classList.remove('lose');}, 800);
                     }
 
                     this.updateJackpot(Math.floor(this.diceBet * 0.1));
@@ -698,6 +710,7 @@
                     this.blackjackDeck.push({suit, value});
                 }
             }
+            // Shuffle
             for (let i = this.blackjackDeck.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [this.blackjackDeck[i], this.blackjackDeck[j]] = [this.blackjackDeck[j], this.blackjackDeck[i]];
@@ -728,20 +741,7 @@
                 </div>
             `;
         },
-        updateBlackjackDisplay() {
-            const dealerHandEl = document.getElementById('dealerHand');
-            const playerHandEl = document.getElementById('playerHand');
-            
-            if (dealerHandEl) dealerHandEl.innerHTML = this.dealerHand.map((card, i) => this.createBlackjackCardElement(card, this.blackjackGameActive && i === 1)).join('');
-            if (playerHandEl) playerHandEl.innerHTML = this.playerHand.map(card => this.createBlackjackCardElement(card)).join('');
-
-            this.playerTotal = `Total: ${this.blackjackHandTotal(this.playerHand)}`;
-            if (this.blackjackGameActive) {
-                this.dealerTotal = `Total: ${this.blackjackCardValue(this.dealerHand[0])}`;
-            } else {
-                this.dealerTotal = `Total: ${this.blackjackHandTotal(this.dealerHand)}`;
-            }
-        },
+        // updateBlackjackDisplay() is no longer needed as computed properties handle updates
         dealBlackjack() {
             if (this.gameState.balance < this.blackjackBet) return;
             
@@ -751,15 +751,14 @@
             this.playerHand = [this.blackjackDeck.pop(), this.blackjackDeck.pop()];
             this.blackjackGameActive = true;
             
-            const table = document.getElementById('blackjackTable');
-            const title = document.getElementById('blackjackTitle');
-            const particles = document.getElementById('blackjackParticles');
+            const table = this.$refs.blackjackTable;
+            const title = this.$refs.blackjackTitle;
 
-            table.classList.remove('win-pulse', 'major-win', 'lose');
-            title.classList.remove('win-glow', 'major-glow');
-            particles.innerHTML = '';
+            if (table) table.classList.remove('win-pulse', 'major-win', 'lose');
+            if (title) title.classList.remove('win-glow', 'major-glow');
+            if (this.$refs.blackjackParticles) this.$refs.blackjackParticles.innerHTML = '';
             
-            this.updateBlackjackDisplay();
+            // updateBlackjackDisplay() is no longer needed here
             
             if (this.blackjackHandTotal(this.playerHand) === 21) {
                 this.endBlackjackGame();
@@ -768,7 +767,7 @@
         hitBlackjack() {
             if (!this.blackjackGameActive) return;
             this.playerHand.push(this.blackjackDeck.pop());
-            this.updateBlackjackDisplay();
+            // updateBlackjackDisplay() is no longer needed here
             
             if (this.blackjackHandTotal(this.playerHand) > 21) {
                 this.endBlackjackGame();
@@ -785,37 +784,35 @@
                 this.dealerHand.push(this.blackjackDeck.pop());
             }
             
-            this.updateBlackjackDisplay();
+            // updateBlackjackDisplay() is no longer needed here
             
             const playerTotal = this.blackjackHandTotal(this.playerHand);
             const dealerTotal = this.blackjackHandTotal(this.dealerHand);
             
             let winAmount = 0;
-            const table = document.getElementById('blackjackTable');
-            const title = document.getElementById('blackjackTitle');
-            const particles = document.getElementById('blackjackParticles');
-
+            const table = this.$refs.blackjackTable;
+            const title = this.$refs.blackjackTitle;
 
             if (playerTotal > 21) {
-                table.classList.add('lose');
-                setTimeout(() => table.classList.remove('lose'), 800);
+                if (table) table.classList.add('lose');
+                setTimeout(() => {if (table) table.classList.remove('lose');}, 800);
             } else if (dealerTotal > 21 || playerTotal > dealerTotal) {
                 winAmount = this.playerHand.length === 2 && playerTotal === 21 ? this.blackjackBet * 2.5 : this.blackjackBet * 2;
                 this.updateBalance(winAmount);
-                table.classList.add('major-win');
-                title.classList.add('major-glow');
-                this.burstMajor(particles);
+                if (table) table.classList.add('major-win');
+                if (title) title.classList.add('major-glow');
+                this.burstMajor('blackjackParticles');
                 setTimeout(() => {
-                    table.classList.remove('major-win');
-                    title.classList.remove('major-glow');
+                    if (table) table.classList.remove('major-win');
+                    if (title) title.classList.remove('major-glow');
                 }, 1000);
             } else if (playerTotal === dealerTotal) {
                 this.updateBalance(this.blackjackBet);
-                table.classList.add('win-pulse');
-                setTimeout(() => table.classList.remove('win-pulse'), 700);
+                if (table) table.classList.add('win-pulse');
+                setTimeout(() => {if (table) table.classList.remove('win-pulse');}, 700);
             } else {
-                table.classList.add('lose');
-                setTimeout(() => table.classList.remove('lose'), 800);
+                if (table) table.classList.add('lose');
+                setTimeout(() => {if (table) table.classList.remove('lose');}, 800);
             }
             
             this.updateJackpot(Math.floor(this.blackjackBet * 0.1));
@@ -829,6 +826,7 @@
                     this.pokerDeck.push({suit, value});
                 }
             }
+            // Shuffle
             for (let i = this.pokerDeck.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [this.pokerDeck[i], this.pokerDeck[j]] = [this.pokerDeck[j], this.pokerDeck[i]];
@@ -866,14 +864,12 @@
         dealPoker() {
             if (this.gameState.balance < this.pokerBet) return;
             
-            const table = document.getElementById('pokerTable');
-            const title = document.getElementById('pokerTitle');
-            const particles = document.getElementById('pokerParticles');
+            const table = this.$refs.pokerTable;
+            const title = this.$refs.pokerTitle;
 
-
-            table.classList.remove('win-pulse', 'major-win', 'lose');
-            title.classList.remove('win-glow', 'major-glow');
-            particles.innerHTML = '';
+            if (table) table.classList.remove('win-pulse', 'major-win', 'lose');
+            if (title) title.classList.remove('win-glow', 'major-glow');
+            if (this.$refs.pokerParticles) this.$refs.pokerParticles.innerHTML = '';
 
 
             if (!this.pokerDealtInitial) {
@@ -899,16 +895,16 @@
                     const winAmount = this.pokerBet * evalResult.multiplier;
                     this.updateBalance(winAmount);
                     if (winAmount >= 200) this.showWinOverlay(winAmount);
-                    table.classList.add('major-win');
-                    title.classList.add('major-glow');
-                    this.burstMajor(particles);
+                    if (table) table.classList.add('major-win');
+                    if (title) title.classList.add('major-glow');
+                    this.burstMajor('pokerParticles');
                     setTimeout(() => {
-                        table.classList.remove('major-win');
-                        title.classList.remove('major-glow');
+                        if (table) table.classList.remove('major-win');
+                        if (title) title.classList.remove('major-glow');
                     }, 1000);
                 } else {
-                    table.classList.add('lose');
-                    setTimeout(() => table.classList.remove('lose'), 800);
+                    if (table) table.classList.add('lose');
+                    setTimeout(() => {if (table) table.classList.remove('lose');}, 800);
                 }
 
                 this.updateJackpot(Math.floor(this.pokerBet * 0.1));
@@ -917,7 +913,7 @@
         },
         togglePokerHold(index) {
             if (this.pokerDealtInitial) { // Only allow holding on initial deal
-                this.pokerHeld[index] = !this.pokerHeld[index];
+                this.$set(this.pokerHeld, index, !this.pokerHeld[index]); // Use Vue.set for reactivity with array elements
             }
         },
     },
