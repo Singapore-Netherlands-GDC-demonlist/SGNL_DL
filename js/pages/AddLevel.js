@@ -4,6 +4,12 @@ export default {
             <title>Add Level</title>
             <h1>Add a New Level to the Demonlist</h1>
             <p>Fill out the form below to generate a JSON file for a new level. Make sure to follow the instructions in the generated JSON section.</p>
+            <div v-if="generatedJson" class="generated-json" ref="generatedJsonSection">
+                <h2>Generated Level JSON</h2>
+                <p>Click the "Copy" button to copy the JSON to your clipboard. Then, create a new file in the /data folder named after your level (e.g., My Awesome Level.json) and paste the content. Finally, add the level name to /data/_list.json.</p>
+                <button @click="copyJson">Copy JSON</button>
+                <span v-if="copied" class="success-message">Copied to clipboard!</span>
+            </div>
             <form @submit.prevent="generateJson">
                 <div class="form-group">
                     <label for="name">Level Name</label>
@@ -31,12 +37,6 @@ export default {
                 </div>
                 <button type="submit">Generate Level JSON</button>
             </form>
-            <div v-if="generatedJson" class="generated-json" ref="generatedJsonSection">
-                <h2>Generated Level JSON</h2>
-                <p>Click the "Copy" button to copy the JSON to your clipboard. Then, create a new file in the /data folder named after your level (e.g., My Awesome Level.json) and paste the content. Finally, add the level name to /data/_list.json.</p>
-                <button @click="copyJson">Copy JSON</button>
-                <span v-if="copied" class="success-message">Copied to clipboard!</span>
-            </div>
         </main>
     `,
     data() {
@@ -66,10 +66,6 @@ export default {
                 this.level.percentToQualify = 100;
             }
             this.generatedJson = JSON.stringify(this.level, null, 4);
-
-            this.$nextTick(() => {
-                this.$refs.generatedJsonSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            });
         },
         copyJson() {
             navigator.clipboard.writeText(this.generatedJson).then(() => {
