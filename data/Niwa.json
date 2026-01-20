@@ -4,9 +4,14 @@
     "creators": ["this one not pedo"],
     "verifier": "Breaddar",
     "verification": "https://www.youtube.com/watch?v=f-H6OE4KVjE",
-    "percentToQualify": "75",
+    "percentToQualify": "100",
     "password": "46290",
     "records": [
-        
+   {
+            "user": "TigrShark",
+            "link": "https://www.youtube.com/watch?v=hEnBgta7wFM",
+            "percent": 100,
+            "hz": 165
+        }              
     ]
 }
