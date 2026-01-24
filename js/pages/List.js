@@ -105,7 +105,7 @@ export default {
                         Achieved the record without using cheats of anykind (Pointercrate rules)
                     </p>
                     <p>
-                        CBF is allowed, however it must be stated whether you have used cbf or not
+                        Cbf is allowed for all completions
                     </p>
                     <p>
                         Spamming the submission sheet will result in a PERMANENT ban from the demonlist and SGNL will not recognise your extreme
@@ -120,10 +120,10 @@ export default {
                         The use of bugs or secret ways will not validate the record
                     </p>
                     <p>
-                        Extreme Demons are the only form of levels allowed to be submitted. We may change our mind in the future, but currently only extremes.
+                        You may submit up to a hard demon, but that will not be prioritised over extremes, so wait time is expected
                     </p>
                     <p>
-                        Once a level falls onto the Legacy List, we accept records for it for 24 hours after it falls off, then afterwards we never accept records for said level
+                        You may find resources for a platformer spreadsheet/progress sheet soon.
                     </p>
                 </div>
             </div>
