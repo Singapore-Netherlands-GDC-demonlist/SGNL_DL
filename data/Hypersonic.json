@@ -7,6 +7,11 @@
     "percentToQualify": "100",
     "password": "no copy",
     "records": [   
-        
+         {
+            "user": "Breaddar",
+            "link": "https://www.youtube.com/watch?v=KRZjsJI93r0",
+            "percent": 100,
+            "hz": 60
+        }
     ]
 }
