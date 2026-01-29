@@ -12,6 +12,12 @@
             "link": "https://youtu.be/djgMr6kfCRs?si=w3hq0sCDRB0GUroj",
             "percent": 100,
             "hz": 240
+        } ,
+           {
+            "user": "Breaddar",
+            "link": "https://www.youtube.com/watch?v=M29pWb1fysc&list=PLCXL-E0z9-ep19TD2Z0AhFhPc0BSssznF&index=43",
+            "percent": 100,
+            "hz": 60
         }
     ]
 }
