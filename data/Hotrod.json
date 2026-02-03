@@ -7,6 +7,11 @@
     "percentToQualify": "75",
     "password": "46290",
     "records": [
-        
+        {
+            "user": "Aerialshard",
+            "link": "https://youtu.be/z6_OPKSvUDk?si=qhLIphdILNNUIvdq",
+            "percent": 100,
+            "hz": 60
+        }
     ]
 }
