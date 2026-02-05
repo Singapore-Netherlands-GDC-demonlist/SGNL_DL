@@ -6,7 +6,12 @@
     "verification": "https://youtu.be/1nimedkMGZs?si=Weei0UFWoQqXiqsp",
     "percentToQualify": "100",
     "password": "46290",
-    "records": [
-        
+    "records": [   
+        {
+            "user": "V0rtex54",
+            "link": "https://youtu.be/PtNSiiuCmeQ?si=dN7M_8kgEU9hobeD",
+            "percent": 100,
+            "hz": 60
+        } 
     ]
 }
