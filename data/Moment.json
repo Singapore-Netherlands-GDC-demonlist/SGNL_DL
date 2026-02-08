@@ -7,6 +7,11 @@
     "percentToQualify": "60",
     "password": "46290",
     "records": [
-        
+        {
+            "user": "oLquren",
+            "link": "https://youtu.be/r7DhlzV9JaA?si=PgBfQz-vXzcl8gCf",
+            "percent": 100,
+            "hz": 60
+        } ,     
     ]
 }
