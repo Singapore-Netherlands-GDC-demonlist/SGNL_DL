@@ -7,6 +7,11 @@
     "percentToQualify": "100",
     "password": "Free to copy",
     "records": [
-        
+        {
+            "user": "Naufalium",
+            "link": "https://youtu.be/p1UDVLX8ntA?si=x6wAbXHnVRysJytd",
+            "percent": 100,
+            "hz": 144
+        }
     ]
 }
